@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>List</title>
+    <style>
+        span.done-true {
+            color: red;
+            text-decoration: line-through;
+        }
+
+    </style>
+</head>
+
+<body ng-app="myApp">
+    <h1 style="text-align: center">Itemlist</h1>
+    <div ng-controller="myCtrl">
+        <form name="myForm">
+            <input type="text" ng-model="item" autofocus ng-keyup="$event.keyCode == 13 ? AddItems(item) : null" placeholder="Enter an item" />
+            <input type="button" value="AddItems" ng-click="AddItems(item)">
+            <ul type="none">
+                <li ng-repeat="l in List">
+                    <span class="done-{{l.status}}"><input type="checkbox" ng-model="l.status">{{l.cont}}</span>
+                </li>
+            </ul>
+            <table>
+                <tr>
+                    <td>
+                        <input type="button" value="All" ng-click="showAll()">
+                    </td>
+                    <td>
+                        <input type="button" value="Active" ng-click="showActive()">
+                    </td>
+                    <td>
+                        <input type="button" value="Inactive" ng-click="showInactive()">
+                    </td>
+                    <td>
+                        <input type="button" value="ClearInactive" ng-click="remove()">
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.js"></script>
+    <script>
+        angular.module("myApp", [])
+            .controller('myCtrl', function($scope) {
+                $scope.item = "";
+                $scope.list = [];
+                $scope.List = [];
+                $scope.AddItems = function(item) {
+                    $scope.List.push({
+                        cont: $scope.item,
+                        status: false
+                    });
+                    $scope.list = $scope.List;
+                    $scope.empty();
+                };
+
+
+                $scope.empty = function() {
+                    $scope.item = " ";
+                };
+                $scope.remove = function() {
+                    var oldList = $scope.list;
+                    $scope.List = [];
+                    angular.forEach(oldList, function(x) {
+                        if (!x.status) $scope.List.push(x);
+                    });
+                };
+                $scope.showActive = function() {
+                    var activeList = $scope.list;
+                    $scope.List = [];
+                    angular.forEach(activeList, function(x) {
+                        if (x.status == false) $scope.List.push(x);
+                    });
+                };
+
+
+
+
+                $scope.showInactive = function() {
+                    var InactiveList = $scope.list;
+                    $scope.List = [];
+                    angular.forEach(InactiveList, function(x) {
+                        if (x.status == true) $scope.List.push(x);
+                    });
+                };
+
+
+                $scope.showAll = function() {
+                    $scope.List = $scope.list;
+
+                };
+
+
+
+            })
+
+    </script>
+    </script>
+</body>
+
+</html>
